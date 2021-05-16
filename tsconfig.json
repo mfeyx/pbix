@@ -1,0 +1,29 @@
+{
+  "include": ["src", "pbix.js"],
+  "compilerOptions": {
+    "rootDir": ".",
+    "allowJs": true,
+    "checkJs": true,
+    "esModuleInterop": true,
+    "lib": ["es6", "DOM"],
+    "module": "commonjs",
+    "noEmit": true,
+    "noImplicitAny": true,
+    "outDir": "build",
+    "resolveJsonModule": true,
+    "strict": true,
+    "target": "es2015",
+    "downlevelIteration": true
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.config.js",
+    "**/_tmp/*",
+    "public",
+    "docs",
+    "test",
+    "*.html",
+    "config",
+    "dev"
+  ]
+}
