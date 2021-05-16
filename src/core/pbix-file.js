@@ -17,11 +17,12 @@ const contentMap = {
 
 const JSON_DATA = Object.keys(contentMap);
 
+/**
+ * @class The PBIX-File Class
+ * @classdesc Class for handling the pbix-file content
+ */
 class PBIX {
-  /**
-   *
-   * @param {object} [options]
-   */
+  /** @param {object} [options] */
   constructor (options) {
     this.options = options || {};
 
@@ -59,22 +60,30 @@ class PBIX {
   }
 
   /**
-   *
-   * @param {string} fpath
+   * Read the *.pbix-File
+   * @method
+   * @async
+   * @param { string } fpath
    */
   async readFile (fpath) {
     this.PBIX_FILE = fpath;
 
-    console.log(this.PBIX_FILE, this.OUT_FOLDER);
-    const ZIP_FILE = this.PBIX_FILE.replace('.pbix', '.zip');
+    // check if file type is correct
+    if (!this.PBIX_FILE.endsWith('.pbix')) {
+      throw new TypeError('Input must be a *.pbix file!');
+    }
 
-    utils.mkdir(this.OUT_FOLDER);
-    utils.renameFile(this.PBIX_FILE, ZIP_FILE);
-    await utils.extractZipFile(ZIP_FILE, this.OUT_FOLDER);
-    utils.rmdir(ZIP_FILE);
+    // try to extract the data
+    const isExtracted = await this._handleFile();
+    if (isExtracted) {
+      for (const content of JSON_DATA ) {
+        this._handleContent(content);
+      }
+      return this;
+    }
 
-    JSON_DATA.forEach(name => this._handleContent(name));
-    return this;
+    // throw or not to throw?
+    throw new Error('Could not extract file content');
   }
 
   /**
@@ -87,6 +96,7 @@ class PBIX {
     const contentPath =  path.resolve(this.OUT_FOLDER, ...folder);
     try {
       const data = utils.fs.readFileSync(contentPath, { encoding: 'utf16le' });
+      // this is somewhat redundant? should change, but how?
       switch(name) {
       case 'metadata':
         this._metadata = utils.deepParseJson(data);
@@ -110,29 +120,58 @@ class PBIX {
     } catch (error) {
       console.error(`Content [${name.toUpperCase()}] not found.`);
     }
+    return;
+  }
+
+  /**
+   * @private
+   * @async
+   * @returns {Promise<boolean>}
+   */
+  async _handleFile () {
+    try {
+      const ZIP_FILE = this.PBIX_FILE.replace('.pbix', '.zip');
+      utils.mkdir(this.OUT_FOLDER);
+      utils.renameFile(this.PBIX_FILE, ZIP_FILE);
+      await utils.extractZipFile(ZIP_FILE, this.OUT_FOLDER);
+      utils.rmdir(ZIP_FILE);
+      return true;
+    } catch (error) {
+      console.error(error.message);
+      return false;
+    }
+  }
+
+  /**
+   * @private
+   * @param {any} obj
+   * @returns
+   */
+  _getter (obj) {
+    return Object.assign({}, obj);
   }
 
   get layout () {
-    return this._report.layout;
+    return this._getter(this._report.layout);
   }
 
   get metadata () {
-    return this._metadata;
+    return this._getter(this._metadata);
   }
 
   get settings () {
-    return this._settings;
+    return this._getter(this._settings);
   }
 
   get diagramLayout () {
-    return this._diagramLayout;
+    return this._getter(this._diagramLayout);
   }
   get version () {
-    return this._version;
+    return this._getter(this._version);
   }
 
   get connections () {
-    return this._connections;
+    return this._getter(this._connections);
   }
 }
 
