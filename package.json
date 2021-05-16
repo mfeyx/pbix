@@ -7,13 +7,18 @@
     "test": "jest",
     "dev": "node dev.js"
   },
-  "files": ["pbix.js", "/src"],
+  "files": [
+    "pbix.js",
+    "/src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mfeyx/pbix.git"
   },
   "keywords": [
-    "pbix", "power bi", "microsoft"
+    "pbix",
+    "power bi",
+    "microsoft"
   ],
   "author": "mfeyx | Markus Feiks",
   "license": "MIT",
@@ -21,6 +26,10 @@
     "url": "https://github.com/mfeyx/pbix/issues"
   },
   "homepage": "https://github.com/mfeyx/pbix#readme",
+  "dependencies": {
+    "object-scan": "^16.0.1",
+    "unzipper": "^0.10.11"
+  },
   "devDependencies": {
     "@types/jest": "^26.0.23",
     "@types/node": "^15.0.2",
@@ -32,8 +41,6 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "jest": "^26.6.3",
-    "object-scan": "^16.0.1",
-    "typescript": "^3.9.9",
-    "unzipper": "^0.10.11"
+    "typescript": "^3.9.9"
   }
 }
