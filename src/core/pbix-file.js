@@ -2,15 +2,18 @@
 const path = require('path');
 const utils = require('../utils');
 
-/** @typedef {import('../types').LayoutFile } LayoutFile */
-/** @typedef {import('../types').PbixMetaData } PbixMetaData */
+/** @typedef { import('../types').LayoutFile   } LayoutFile */
+/** @typedef { import('../types').PbixMetaData } PbixMetaData */
 
-/** @type {Object< string, string[] >} */
+/** @type { Object<string, string[]> } */
 const contentMap = {
   version:       ['Version'],
+  // report pages
   layout:        ['Report', 'Layout'],
   metadata:      ['Metadata'],
+  // file settings
   settings:      ['Settings'],
+  // model-view layouts
   diagramLayout: ['DiagramLayout'],
   connections:   ['Connections'],
 };
@@ -93,28 +96,30 @@ class PBIX {
    */
   _handleContent (name) {
     const folder = contentMap[name];
-    const contentPath =  path.resolve(this.OUT_FOLDER, ...folder);
+    const contentPath = path.resolve(this.OUT_FOLDER, ...folder);
     try {
-      const data = utils.fs.readFileSync(contentPath, { encoding: 'utf16le' });
+      const json = utils.fs.readFileSync(contentPath, { encoding: 'utf16le' });
+      const data = utils.deepParseJson(json);
       // this is somewhat redundant? should change, but how?
       switch(name) {
       case 'metadata':
-        this._metadata = utils.deepParseJson(data);
+        this._metadata = data;
         break;
       case 'layout':
-        this._report.layout = utils.deepParseJson(data);
+        this._report.layout = data;
+        this._sections = this.sections;
         break;
       case 'settings':
-        this._settings = utils.deepParseJson(data);
+        this._settings = data;
         break;
       case 'diagramLayout':
-        this._diagramLayout = utils.deepParseJson(data);
+        this._diagramLayout = data;
         break;
       case 'version':
-        this._version = utils.deepParseJson(data);
+        this._version = data;
         break;
       case 'connections':
-        this._connections = utils.deepParseJson(data);
+        this._connections = data;
         break;
       }
     } catch (error) {
@@ -126,7 +131,7 @@ class PBIX {
   /**
    * @private
    * @async
-   * @returns {Promise<boolean>}
+   * @returns { Promise<boolean> }
    */
   async _handleFile () {
     try {
@@ -151,8 +156,22 @@ class PBIX {
     return Object.assign({}, obj);
   }
 
+  /**
+   * @returns { LayoutFile }
+   */
   get layout () {
     return this._getter(this._report.layout);
+  }
+
+  /**
+   * @returns { string[] | null }
+   */
+  get sections () {
+    const layout = this.layout;
+    if (layout) {
+      return layout.sections.map(s => s.displayName);
+    }
+    return null;
   }
 
   get metadata () {

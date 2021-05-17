@@ -26,6 +26,9 @@ module.exports = {
     'no-unused-vars': [
       'error'
     ],
+    'no-invalid-this': [
+      'error'
+    ],
     'space-before-function-paren': ['error', {
       'anonymous': 'always',
       'named': 'always',
