@@ -2,8 +2,9 @@
 const path = require('path');
 const utils = require('../utils');
 
-/** @typedef { import('../types').LayoutFile   } LayoutFile */
-/** @typedef { import('../types').PbixMetaData } PbixMetaData */
+/** @typedef { import('../types').LayoutFile    } LayoutFile */
+/** @typedef { import('../types').LayoutSection } LayoutSection */
+/** @typedef { import('../types').PbixMetaData  } PbixMetaData */
 
 /** @type { Object<string, string[]> } */
 const contentMap = {
@@ -166,7 +167,7 @@ class PBIX {
   }
 
   /**
-   * @returns { object[] | null }
+   * @returns { LayoutSection[] | null }
    */
   get sections () {
     const layout = this.layout;
@@ -182,6 +183,16 @@ class PBIX {
     return sectionsSorted;
   }
 
+  /**
+   * @returns { number | null }
+   */
+  get version () {
+    return this._version;
+  }
+
+  /**
+   * @returns { PbixMetaData | null }
+   */
   get metadata () {
     return this._getter(this._metadata);
   }
@@ -192,9 +203,6 @@ class PBIX {
 
   get diagramLayout () {
     return this._getter(this._diagramLayout);
-  }
-  get version () {
-    return this._getter(this._version);
   }
 
   get connections () {
