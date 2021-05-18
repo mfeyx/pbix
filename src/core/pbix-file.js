@@ -7,14 +7,17 @@ const utils = require('../utils');
 
 /** @type { Object<string, string[]> } */
 const contentMap = {
+  // version of what?
   version:       ['Version'],
   // report pages
   layout:        ['Report', 'Layout'],
+  // meta information
   metadata:      ['Metadata'],
   // file settings
   settings:      ['Settings'],
-  // model-view layouts
+  // model-view layouts?
   diagramLayout: ['DiagramLayout'],
+  // connections to?
   connections:   ['Connections'],
 };
 
@@ -107,7 +110,6 @@ class PBIX {
         break;
       case 'layout':
         this._report.layout = data;
-        this._sections = this.sections;
         break;
       case 'settings':
         this._settings = data;
@@ -164,14 +166,20 @@ class PBIX {
   }
 
   /**
-   * @returns { string[] | null }
+   * @returns { object[] | null }
    */
   get sections () {
     const layout = this.layout;
+    let sectionsSorted = null;
     if (layout) {
-      return layout.sections.map(s => s.displayName);
+      const sections = layout.sections;
+      sectionsSorted = new Array(sections.length);
+      for (const section of sections) {
+        const i = section.ordinal ? section.ordinal - 1 : 0;
+        sectionsSorted[i] = section;
+      }
     }
-    return null;
+    return sectionsSorted;
   }
 
   get metadata () {
