@@ -3,6 +3,8 @@
 /* -------------------------------------------------------------------------- */
 
 /**
+ * # PbixMetaData
+ * ## Report/Metadata
  * @typedef { object } PbixMetaData
  * @property {number} version
  * @property {any[] } autoCreatedRelationships
@@ -12,7 +14,8 @@
  */
 
 /**
- * ### Report/Layout
+ * # LayoutFile
+ * ## Report/Layout
  * This is the root of the Layout file
  * @typedef  { object } LayoutFile
  * @property { number } id
@@ -23,40 +26,43 @@
  */
 
 /**
- * Layout.sections
+ * # LayoutSection
+ * ## Layout.sections[ LayoutSection ]
  * @typedef  { object } LayoutSection
  * @property { number } id
  * @property { string } name
  * @property { string } displayName
- * @property { object[] } filters
- * @property { number } ordinal
- * @property { LayoutSectionVisualContainer[] } visualContainers
+ * @property { object[] } filters Applied Page Filters
+ * @property { number } ordinal Page Number
+ * @property { VisualContainer[] } visualContainers PBI Visuals
  * @property { object } config
- * @property { number } displayOption
- * @property { number } width
- * @property { number } height
+ * @property { 1|2|3 } displayOption Page View Options (1= fit to page, 2= fit to width, 3= actual size)
+ * @property { number } width   Page Width
+ * @property { number } height  Page Height
  */
 
 /**
- * ### Layout.sections[].config
+ * # VisualContainer
+ * ## Layout.sections[ LayoutSection.visualContainers[VisualContainer] ]
  * A config for each section
- * @typedef  { object } LayoutSectionVisualContainer
- * @property { number } x
- * @property { number } y
- * @property { number } z
- * @property { number } width
- * @property { number } height
+ * @typedef  { object } VisualContainer
+ * @property { number } x x-Axis (Left-Right)
+ * @property { number } y y-Axis (Bottom-Top)
+ * @property { number } z z-Axis (Layer Stack)
+ * @property { number } width Width of Visualization
+ * @property { number } height Height of Visualization
  * @property { string } config
- * @property { string } filters Stringified Array
+ * @property { object[] } filters
  * @property { string } query Stringified Object
  * @property { string } dataTransforms
  */
 
 /**
- * ### Layout.sections[].config
+ * # LayoutSectionConfig
+ * ## Layout.sections[ LayoutSection.config ]
  * A config for each section
  * @typedef  { object } LayoutSectionConfig
- * @typedef  { object[] } layouts
+ * @property { object[] } layouts
  * @property { string } name
  * @property { SingleVisual } singleVisual
  */
@@ -64,19 +70,20 @@
 /**
  * @typedef  { object } SingleVisual
  * @property { string } visualType
- * @property { object[] } projections
+ * @property { Projections } projections
  * @property { object[] } prototypeQuery
  * @property { boolean } drillFilterOtherVisuals
  */
 
 /**
- * @typedef  { object } Projection
+ * @typedef  { object } Projections
  * @property { ProjectionValue[] } Values
  */
 
 /**
- * @typedef  { object } ProjectionValue
- * @property { string } queryRef
+ * @typedef  { object }   ProjectionValue
+ * @property { string }   queryRef
+ * @property { boolean }  active
  */
 
 /** @ignore */
