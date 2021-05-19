@@ -7,7 +7,7 @@ yarn-error.log*
 lerna-debug.log*
 
 data
-*tmp
+*tmp*
 dev.js
 *.pbix
 

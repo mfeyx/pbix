@@ -1,6 +1,11 @@
 /**
- * @license
+ * @module PBIX
+ * ## pbix
+ * Read Microsoft Power BI-Files
+ * @author Markus Feiks
+ * @version 0.0.2
  *
+ * @license
  * MIT License
  * Copyright (c) 2021 Markus Feiks
  *
@@ -22,15 +27,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- */
-
-/**
- * @author Markus Feiks
- */
-const PBIX = require('./src/core/pbix-file');
-
-/**
- * @example <caption>Read a file</caption>
+ * @example
  * const PBIX = require('pbix')
  * const fpath = 'my-dataset.pbix';
  * // no options atm, but will be of type `object`
@@ -41,4 +38,6 @@ const PBIX = require('./src/core/pbix-file');
  *   console.log(layout);
  * });
  */
+const PBIX = require('./src/core/pbix-file');
+
 module.exports = PBIX;
