@@ -9,17 +9,17 @@ const utils = require('../utils');
 /** @type { Object<string, string[]> } */
 const contentMap = {
   // version of what?
-  version:       ['Version'],
+  version: ['Version'],
   // report pages
-  layout:        ['Report', 'Layout'],
+  layout: ['Report', 'Layout'],
   // meta information
-  metadata:      ['Metadata'],
+  metadata: ['Metadata'],
   // file settings
-  settings:      ['Settings'],
-  // model-view layouts?
+  settings: ['Settings'],
+  // model pane layouts
   diagramLayout: ['DiagramLayout'],
   // connections to?
-  connections:   ['Connections'],
+  connections: ['Connections'],
 };
 
 const JSON_DATA = Object.keys(contentMap);

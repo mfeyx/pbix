@@ -1,5 +1,7 @@
 'use strict';
 const fs = require('fs');
+//@ts-ignore
+const objectScan = require('object-scan');
 const unzip = require('unzipper');
 
 /* -------------------------------------------------------------------------- */
@@ -241,6 +243,22 @@ function repeatString (char, n=1) {
 }
 
 /* -------------------------------------------------------------------------- */
+/*                              SCANNING OBJECTS                              */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Scan Object with objectScan
+ * @param { object } haystack
+ * @param { string | string[] } needle
+ * @param { object } config
+ * @see https://github.com/blackflux/object-scan
+ * @returns
+ */
+function scan (haystack, needle, config) {
+  return objectScan(needle, config)(haystack);
+}
+
+/* -------------------------------------------------------------------------- */
 
 module.exports = {
   fs,
@@ -261,4 +279,5 @@ module.exports = {
   safeParse,
   deepParseJson,
   repeatString,
+  scan
 };
