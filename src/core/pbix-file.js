@@ -7,7 +7,14 @@ const utils = require('../utils');
 /** @typedef { import('../types').LayoutSection } LayoutSection */
 /** @typedef { import('../types').PbixMetaData  } PbixMetaData */
 
-/** @type { Object<string, string[]> } */
+/**
+ * @private
+ * @ignore
+ * @description
+ * Not every extracted file can be processed.
+ * The following files represent JSON data.
+ * @type { Object<string, string[]> }
+ */
 const contentMap = {
   // version of what?
   version: ['Version'],
@@ -23,6 +30,12 @@ const contentMap = {
   connections: ['Connections'],
 };
 
+/**
+ * @private
+ * @ignore
+ * @description
+ * Used for internal handlers.
+ */
 const JSON_DATA = Object.keys(contentMap);
 
 /**
@@ -64,23 +77,25 @@ class PBIX {
       layout: null,
       linguisticSchema: null,
     };
-
   }
+
+  /* -------------------------------------------------------------------------- */
+  /*                                     API                                    */
+  /* -------------------------------------------------------------------------- */
 
   /**
    * Read the *.pbix-File
    * @method
    * @async
+   * @since 0.0.1
    * @param { string } fpath
    */
   async readFile (fpath) {
     this.PBIX_FILE = fpath;
-
     // check if file type is correct
     if (!this.PBIX_FILE.endsWith('.pbix')) {
       throw new TypeError('Input must be a *.pbix file!');
     }
-
     // try to extract the data
     const isExtracted = await this._handleFile();
     if (isExtracted) {
@@ -89,13 +104,14 @@ class PBIX {
       }
       return this;
     }
-
     // throw or not to throw?
     throw new Error('Could not extract file content');
   }
 
   /**
    * Read extracted content data
+   * @method
+   * @since 0.0.3
    * @param {string} [cpath] Path to extracted content
    */
   readContent (cpath) {
@@ -109,6 +125,60 @@ class PBIX {
       return this;
     }
   }
+
+  /**
+   * @returns { LayoutFile }
+   */
+  get layout () {
+    return this._getter(this._report.layout);
+  }
+
+  /**
+   * @returns { LayoutSection[] | null }
+   */
+  get sections () {
+    const layout = this.layout;
+    let sectionsSorted = null;
+    if (layout) {
+      const sections = layout.sections;
+      sectionsSorted = new Array(sections.length);
+      for (const section of sections) {
+        const i = section.ordinal ? section.ordinal - 1 : 0;
+        sectionsSorted[i] = section;
+      }
+    }
+    return sectionsSorted;
+  }
+
+  /**
+   * @returns { number | null }
+   */
+  get version () {
+    return this._version;
+  }
+
+  /**
+   * @returns { PbixMetaData | null }
+   */
+  get metadata () {
+    return this._getter(this._metadata);
+  }
+
+  get settings () {
+    return this._getter(this._settings);
+  }
+
+  get diagramLayout () {
+    return this._getter(this._diagramLayout);
+  }
+
+  get connections () {
+    return this._getter(this._connections);
+  }
+
+  /* -------------------------------------------------------------------------- */
+  /*                              INTERNAL HELPERS                              */
+  /* -------------------------------------------------------------------------- */
 
   /**
    * Handle the different Content Parts of the File
@@ -176,56 +246,6 @@ class PBIX {
     return Object.assign({}, obj);
   }
 
-  /**
-   * @returns { LayoutFile }
-   */
-  get layout () {
-    return this._getter(this._report.layout);
-  }
-
-  /**
-   * @returns { LayoutSection[] | null }
-   */
-  get sections () {
-    const layout = this.layout;
-    let sectionsSorted = null;
-    if (layout) {
-      const sections = layout.sections;
-      sectionsSorted = new Array(sections.length);
-      for (const section of sections) {
-        const i = section.ordinal ? section.ordinal - 1 : 0;
-        sectionsSorted[i] = section;
-      }
-    }
-    return sectionsSorted;
-  }
-
-  /**
-   * @returns { number | null }
-   */
-  get version () {
-    return this._version;
-  }
-
-  /**
-   * @returns { PbixMetaData | null }
-   */
-  get metadata () {
-    return this._getter(this._metadata);
-  }
-
-  get settings () {
-    return this._getter(this._settings);
-  }
-
-  get diagramLayout () {
-    return this._getter(this._diagramLayout);
-  }
-
-  get connections () {
-    return this._getter(this._connections);
-  }
 }
-
 
 module.exports = PBIX;
