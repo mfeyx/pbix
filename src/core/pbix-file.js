@@ -1,4 +1,5 @@
 'use strict';
+const fs = require('fs');
 const path = require('path');
 const utils = require('../utils');
 
@@ -94,6 +95,22 @@ class PBIX {
   }
 
   /**
+   * Read extracted content data
+   * @param {string} [cpath] Path to extracted content
+   */
+  readContent (cpath) {
+    cpath = cpath || '.pbix-content';
+    const reportFolder = path.join(cpath, 'Report');
+    const isExtracted = fs.existsSync(reportFolder);
+    if (isExtracted) {
+      for (const content of JSON_DATA ) {
+        this._handleContent(content);
+      }
+      return this;
+    }
+  }
+
+  /**
    * Handle the different Content Parts of the File
    * @private
    * @param { string } name
@@ -102,7 +119,7 @@ class PBIX {
     const folder = contentMap[name];
     const contentPath = path.resolve(this.OUT_FOLDER, ...folder);
     try {
-      const json = utils.fs.readFileSync(contentPath, { encoding: 'utf16le' });
+      const json = fs.readFileSync(contentPath, { encoding: 'utf16le' });
       const data = utils.deepParseJson(json);
       // this is somewhat redundant? should change, but how?
       switch(name) {
